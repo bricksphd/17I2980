@@ -27,11 +27,8 @@ public class MoreKernels extends Application {
         
         outputImageJfx.copyFrom(inputImageJfx);
         
-        
-        outputImageJfx.blur(1);
+        outputImageJfx.sharpen();
         outputImageJfx.save();
-        
-        
         
         launch(args);
     }
@@ -41,9 +38,6 @@ public class MoreKernels extends Application {
         
         ImageView inputImageView = new ImageView(inputImageJfx);
         ImageView outputImageView = new ImageView(outputImageJfx);
-      
-        
-        
         
         FlowPane root = new FlowPane();
         root.setPadding(new Insets(10, 10, 10, 10));
