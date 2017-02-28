@@ -1,6 +1,5 @@
 package day10;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,20 +9,17 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
-import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javax.imageio.ImageIO;
 
 public class MoreKernels extends Application {
     
@@ -54,6 +50,56 @@ public class MoreKernels extends Application {
         ImageView outputImageView = new ImageView(outputImageJfx);
       
         VBox menuPane = new VBox();
+       
+        Button undoButton = new Button("Undo");
+        undoButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+                
+                
+                if(undoStack.size() > 0)
+                {
+                    MyImage previousImage = undoStack.get(undoStack.size() - 1);
+                    undoStack.remove(undoStack.size() - 1);
+                    
+                    redoStack.add(outputImageJfx);
+                    
+                    outputImageJfx = previousImage;
+                            
+                            
+                    outputImageView.setImage(outputImageJfx);
+                    
+                    
+                }
+                
+            }
+        });
+        menuPane.getChildren().add(undoButton);
+        
+        Button redoButton = new Button("Redo");
+        redoButton.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent event) {
+                if(redoStack.size() > 0)
+                {
+                    MyImage previousImage = redoStack.get(redoStack.size() - 1);
+                    redoStack.remove(redoStack.size() - 1);
+                    
+                    undoStack.add(outputImageJfx);
+                    
+                    outputImageJfx = previousImage;
+                            
+                            
+                    outputImageView.setImage(outputImageJfx);
+                    
+                    
+                }
+            }
+        });
+        menuPane.getChildren().add(redoButton);
+        
+        menuPane.getChildren().add(new Separator());
+        
         
         for(Method method : outputImageJfx.getClass().getDeclaredMethods())
         {
@@ -74,10 +120,10 @@ public class MoreKernels extends Application {
                             newImage.copyFrom(outputImageJfx);
                             
                             undoStack.add(outputImageJfx);
+    
+                            redoStack.clear();
                             
                             outputImageJfx = newImage;
-                            
-                            
                             
                             
                             method.invoke(outputImageJfx, new Object[]{1});
