@@ -50,7 +50,7 @@ public class MoreKernels extends Application {
         ImageView outputImageView = new ImageView(outputImageJfx);
       
         VBox menuPane = new VBox();
-        
+       
         Button undoButton = new Button("Undo");
         undoButton.setOnAction(new EventHandler<ActionEvent>(){
             @Override
@@ -120,7 +120,7 @@ public class MoreKernels extends Application {
                             newImage.copyFrom(outputImageJfx);
                             
                             undoStack.add(outputImageJfx);
-                            
+    
                             redoStack.clear();
                             
                             outputImageJfx = newImage;
